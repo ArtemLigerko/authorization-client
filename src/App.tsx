@@ -13,7 +13,7 @@ const App: FC = () => {
 
   useEffect(() => {
     if (localStorage.getItem("token")) {
-      dispatch(userActions.checkAuth({}));
+      dispatch(userActions.checkAuth());
     }
   }, []);
 

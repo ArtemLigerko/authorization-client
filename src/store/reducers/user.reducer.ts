@@ -12,7 +12,7 @@ interface AuthUserInitialState {
   email: string;
   isActivated: false;
   id: string;
-  isAuth?: boolean;
+  isAuth: boolean;
   isLoading?: boolean;
   error?: string | Error;
 }
@@ -25,24 +25,13 @@ const authUserInitialState: AuthUserInitialState = {
   error: undefined,
 };
 
-interface UsersInitialState<T = object> {
-  users: Array<T>;
-  isLoading?: boolean;
-  error?: string | Error;
-}
-const usersInitialState: UsersInitialState = {
-  users: [],
-  isLoading: false,
-  error: undefined,
-};
-
 interface UserStore {
   authUser: AuthUserInitialState;
-  users: UsersInitialState;
+  // users: UsersInitialState;
 }
 const userInitialState: UserStore = {
   authUser: authUserInitialState,
-  users: usersInitialState,
+  // users: usersInitialState,
 };
 
 interface RegistrationResponse {}
@@ -84,16 +73,15 @@ const logout = createAsyncThunk("auth/logout", async () => {
   localStorage.removeItem("token");
 });
 
-interface CheckResponse {}
-interface CheckRequest {}
+export interface CheckAuthResponse {}
 
-const checkAuth = createAsyncThunk<CheckResponse, CheckRequest>(
+const checkAuth = createAsyncThunk<CheckAuthResponse>(
   "auth/check",
   async () => {
     const response = await axios.get<AuthResponse>(`${API_URL}/refresh`, {
       withCredentials: true,
     });
-    console.log(response);
+    console.log(response.data.user);
     localStorage.setItem("token", response.data.accessToken);
     return response.data.user;
   }
@@ -158,6 +146,7 @@ const userSlice = createSlice({
     });
     builder.addCase(checkAuth.rejected, (store) => {
       store.authUser.isLoading = false;
+      console.warn("Failed to check Auth");
     });
   },
 });
