@@ -1,6 +1,9 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { buildQueries } from "@testing-library/react";
+import axios from "axios";
+import { API_URL } from "../../http";
 import { IUser } from "../../models/IUser";
+import { AuthResponse } from "../../models/response/AuthResponse";
 import {
   loginService,
   logoutService,
@@ -44,12 +47,6 @@ const userInitialState: UserStore = {
   users: usersInitialState,
 };
 
-interface LoginResponse {}
-interface LoginRequest {
-  email: string;
-  password: string;
-}
-
 interface RegistrationResponse {
   // user: IUser;
   // accessToken: string;
@@ -59,7 +56,22 @@ interface RegistrationRequest {
   email: string;
   password: string;
 }
+const registration = createAsyncThunk<
+  RegistrationResponse,
+  RegistrationRequest
+>("auth/registration", async (body) => {
+  const { email, password } = body;
+  const response = await registrationService(email, password);
+  console.log(response);
+  localStorage.setItem("token", response.data.accessToken);
+  return response.data.user;
+});
 
+interface LoginResponse {}
+interface LoginRequest {
+  email: string;
+  password: string;
+}
 const login = createAsyncThunk<LoginResponse, LoginRequest>(
   "auth/login",
   async (body) => {
@@ -72,22 +84,26 @@ const login = createAsyncThunk<LoginResponse, LoginRequest>(
   }
 );
 
-const registration = createAsyncThunk<
-  RegistrationResponse,
-  RegistrationRequest
->("auth/registration", async (body) => {
-  const { email, password } = body;
-  const response = await registrationService(email, password);
-  console.log(response);
-  localStorage.setItem("token", response.data.accessToken);
-  return response.data.user;
-});
-
 const logout = createAsyncThunk("auth/logout", async () => {
   const response = await logoutService();
   console.log(response);
   localStorage.removeItem("token");
 });
+
+interface CheckResponse {}
+interface CheckRequest {}
+
+const checkAuth = createAsyncThunk<CheckResponse, CheckRequest>(
+  "auth/check",
+  async () => {
+    const response = await axios.get<AuthResponse>(`${API_URL}/refresh`, {
+      withCredentials: true,
+    });
+    console.log(response);
+    localStorage.setItem("token", response.data.accessToken);
+    return response.data.user;
+  }
+);
 
 const userSlice = createSlice({
   name: "user",
@@ -136,6 +152,19 @@ const userSlice = createSlice({
       store.authUser.isLoading = false;
       console.warn("Failed to logout");
     });
+
+    builder.addCase(checkAuth.pending, (store) => {
+      store.authUser.isLoading = true;
+    });
+    builder.addCase(checkAuth.fulfilled, (store, action) => {
+      store.authUser.isLoading = false;
+      store.authUser.error = undefined;
+      store.authUser.isAuth = true;
+      store.authUser = { ...store.authUser, ...action.payload };
+    });
+    builder.addCase(checkAuth.rejected, (store) => {
+      store.authUser.isLoading = false;
+    });
   },
 });
 
@@ -144,6 +173,7 @@ export const userActions = {
   login,
   registration,
   logout,
+  checkAuth,
 };
 
 export default userSlice.reducer;
