@@ -4,10 +4,15 @@ import LoginForm from "./components/LoginForm";
 import { observer } from "mobx-react-lite";
 import { IUser } from "./models/IUser";
 import { fetchUsersService } from "./services/UserServive";
+import { useAppDispatch, useAppSelector } from "./store/store-redux";
+import { userActions } from "./store/reducers/user.reducer";
 
 const App: FC = () => {
   const { store } = useContext(Context);
   const [users, setUsers] = useState<IUser[]>([]);
+
+  const dispatch = useAppDispatch();
+  const authUser = useAppSelector((store) => store.user.authUser);
 
   useEffect(() => {
     if (localStorage.getItem("token")) {
@@ -28,7 +33,7 @@ const App: FC = () => {
     return <div>Loading...</div>;
   }
 
-  if (!store.isAuth) {
+  if (!authUser.isAuth) {
     return (
       <div>
         <LoginForm />
@@ -40,14 +45,14 @@ const App: FC = () => {
   return (
     <div>
       <h1>
-        {store.isAuth
+        {authUser.isAuth
           ? `User is authorized ${store.user.email}`
           : "You need authorize"}
       </h1>
       <h1>
-        {store.user.isActivated ? "Account activated" : "Activate account!"}
+        {authUser.isActivated ? "Account activated" : "Activate account!"}
       </h1>
-      <button onClick={() => store.logout()}>Logout</button>
+      <button onClick={() => dispatch(userActions.logout())}>Logout</button>
       <div>
         <button onClick={getUsers}>Get users</button>
       </div>
