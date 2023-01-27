@@ -1,14 +1,11 @@
-import React, { FC, useEffect, useContext, useState } from "react";
-import { Context } from "./index";
+import { FC, useEffect, useState } from "react";
 import LoginForm from "./components/LoginForm";
-import { observer } from "mobx-react-lite";
-import { IUser } from "./models/IUser";
+import { IUser } from "./types";
 import { fetchUsersService } from "./services/UserServive";
 import { useAppDispatch, useAppSelector } from "./store/store-redux";
 import { userActions } from "./store/reducers/user.reducer";
 
 const App: FC = () => {
-  const { store } = useContext(Context);
   const [users, setUsers] = useState<IUser[]>([]);
 
   const dispatch = useAppDispatch();
@@ -16,7 +13,6 @@ const App: FC = () => {
 
   useEffect(() => {
     if (localStorage.getItem("token")) {
-      // store.checkAuth();
       dispatch(userActions.checkAuth({}));
     }
   }, []);
@@ -30,7 +26,7 @@ const App: FC = () => {
     }
   };
 
-  if (store.isLoading) {
+  if (authUser.isLoading) {
     return <div>Loading...</div>;
   }
 
@@ -47,11 +43,11 @@ const App: FC = () => {
     <div>
       <h1>
         {authUser.isAuth
-          ? `User is authorized ${store.user.email}`
+          ? `User is authorized ${authUser.email}`
           : "You need authorize"}
       </h1>
       <h1>
-        {authUser.isActivated ? "Account activated" : "Activate account!"}
+        {authUser.isActivated ? "Account is activated" : "Activate account!"}
       </h1>
       <button onClick={() => dispatch(userActions.logout())}>Logout</button>
       <div>
@@ -64,4 +60,4 @@ const App: FC = () => {
   );
 };
 
-export default observer(App); //observe need for mobx working
+export default App;

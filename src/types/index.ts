@@ -1,4 +1,8 @@
-import { IUser } from "../IUser";
+export interface IUser {
+  email: string;
+  isActivated: boolean;
+  id: string;
+}
 
 export interface AuthResponse {
   accessToken: string;

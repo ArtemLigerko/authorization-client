@@ -1,13 +1,10 @@
-import React, { FC, useState, useContext } from "react";
-import { Context } from "../index";
-import { observer } from "mobx-react-lite";
+import { FC, useState } from "react";
 import { useAppDispatch } from "../store/store-redux";
 import { userActions } from "../store/reducers/user.reducer";
 
 const LoginForm: FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { store } = useContext(Context);
 
   const dispatch = useAppDispatch();
 
@@ -33,12 +30,10 @@ const LoginForm: FC = () => {
         type="password"
         placeholder="Password"
       />
-      {/* <button onClick={() => store.login(email, password)}>Login</button> */}
       <button onClick={login}>Login</button>
-      {/* <button onClick={() => store.registration(email, password)}> */}
       <button onClick={registration}>Registration</button>
     </div>
   );
 };
 
-export default observer(LoginForm);
+export default LoginForm;

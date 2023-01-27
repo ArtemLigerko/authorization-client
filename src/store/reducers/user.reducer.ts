@@ -1,9 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { buildQueries } from "@testing-library/react";
 import axios from "axios";
 import { API_URL } from "../../http";
-import { IUser } from "../../models/IUser";
-import { AuthResponse } from "../../models/response/AuthResponse";
+import { AuthResponse } from "../../types";
 import {
   loginService,
   logoutService,
@@ -47,11 +45,7 @@ const userInitialState: UserStore = {
   users: usersInitialState,
 };
 
-interface RegistrationResponse {
-  // user: IUser;
-  // accessToken: string;
-  // refreshToken: string;
-}
+interface RegistrationResponse {}
 interface RegistrationRequest {
   email: string;
   password: string;

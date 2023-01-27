@@ -1,6 +1,6 @@
 import instans from "../http";
 import { AxiosResponse } from "axios";
-import { AuthResponse } from "../models/response/AuthResponse";
+import { AuthResponse } from "../types";
 
 export const registrationService = async (
   email: string,

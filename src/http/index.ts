@@ -1,5 +1,5 @@
 import axios from "axios";
-import { AuthResponse } from "../models/response/AuthResponse";
+import { AuthResponse } from "../types";
 
 export const API_URL = "http://localhost:5000/api";
 
