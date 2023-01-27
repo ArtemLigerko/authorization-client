@@ -2,7 +2,7 @@ import { FC, useEffect, useState } from "react";
 import LoginForm from "./components/LoginForm";
 import { IUser } from "./types";
 import { fetchUsersService } from "./services/UserServive";
-import { useAppDispatch, useAppSelector } from "./store/store-redux";
+import { useAppDispatch, useAppSelector } from "./store/store";
 import { userActions } from "./store/reducers/user.reducer";
 
 const App: FC = () => {

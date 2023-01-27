@@ -1,5 +1,5 @@
 import { FC, useState } from "react";
-import { useAppDispatch } from "../store/store-redux";
+import { useAppDispatch } from "../store/store";
 import { userActions } from "../store/reducers/user.reducer";
 
 const LoginForm: FC = () => {
