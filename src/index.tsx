@@ -1,7 +1,9 @@
 import React, { createContext } from "react";
 import ReactDOM from "react-dom/client";
+import { Provider } from "react-redux";
 import App from "./App";
 import Store from "./store/store";
+import { storeRedux } from "./store/store-redux";
 
 interface State {
   store: Store;
@@ -18,6 +20,8 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <Context.Provider value={{ store }}>
-    <App />
+    <Provider store={storeRedux}>
+      <App />
+    </Provider>
   </Context.Provider>
 );

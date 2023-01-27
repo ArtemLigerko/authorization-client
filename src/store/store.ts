@@ -1,9 +1,13 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { makeAutoObservable } from "mobx";
 import { API_URL } from "../http";
 import { IUser } from "../models/IUser";
 import { AuthResponse } from "../models/response/AuthResponse";
-import AuthService from "../services/AuthService";
+import {
+  loginService,
+  registrationService,
+  logoutService,
+} from "../services/AuthService";
 
 export default class Store {
   user = {} as IUser;
@@ -29,31 +33,33 @@ export default class Store {
   //actions:
   async login(email: string, password: string) {
     try {
-      const response = await AuthService.login(email, password);
+      const response = await loginService(email, password);
       console.log(response);
       localStorage.setItem("token", response.data.accessToken);
       this.setAuth(true);
       this.setUser(response.data.user);
     } catch (e: any) {
+      console.log("login error");
       console.log(e.response?.data?.message);
     }
   }
 
   async registration(email: string, password: string) {
     try {
-      const response = await AuthService.registration(email, password);
+      const response = await registrationService(email, password);
       console.log(response);
       localStorage.setItem("token", response.data.accessToken);
       this.setAuth(true);
       this.setUser(response.data.user);
     } catch (e: any) {
-      console.log(e.response?.data?.message);
+      console.log("registration error");
+      console.log(e?.response?.data?.message);
     }
   }
 
   async logout() {
     try {
-      const response = await AuthService.logout();
+      const response = await logoutService();
       console.log(response);
       localStorage.removeItem("token");
       this.setAuth(false);

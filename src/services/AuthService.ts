@@ -1,23 +1,21 @@
-import $api from "../http";
+import instans from "../http";
 import { AxiosResponse } from "axios";
 import { AuthResponse } from "../models/response/AuthResponse";
 
-export default class AuthService {
-  static async login(
-    email: string,
-    password: string
-  ): Promise<AxiosResponse<AuthResponse>> {
-    return $api.post<AuthResponse>("/login", { email, password });
-  }
+export const registrationService = async (
+  email: string,
+  password: string
+): Promise<AxiosResponse<AuthResponse>> => {
+  return instans.post<AuthResponse>("/registration", { email, password });
+};
 
-  static async registration(
-    email: string,
-    password: string
-  ): Promise<AxiosResponse<AuthResponse>> {
-    return $api.post<AuthResponse>("/registration", { email, password });
-  }
+export const loginService = async (
+  email: string,
+  password: string
+): Promise<AxiosResponse<AuthResponse>> => {
+  return instans.post<AuthResponse>("/login", { email, password });
+};
 
-  static async logout(): Promise<void> {
-    return $api.post("/logout");
-  }
-}
+export const logoutService = async (): Promise<void> => {
+  return instans.post("/logout");
+};

@@ -3,7 +3,7 @@ import { Context } from "./index";
 import LoginForm from "./components/LoginForm";
 import { observer } from "mobx-react-lite";
 import { IUser } from "./models/IUser";
-import UserService from "./services/UserServive";
+import { fetchUsersService } from "./services/UserServive";
 
 const App: FC = () => {
   const { store } = useContext(Context);
@@ -17,7 +17,7 @@ const App: FC = () => {
 
   const getUsers = async () => {
     try {
-      const response = await UserService.fetchUsers();
+      const response = await fetchUsersService();
       setUsers(response.data);
     } catch (e) {
       console.log(e);
